@@ -29,8 +29,8 @@ load-plugins
 
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
 if empty(glob(data_dir . '/autoload/plug.vim'))
-  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+    silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
 
@@ -47,6 +47,10 @@ nnoremap ,goe "cyiw :read $HOME/.vim/.skeleton_go_err.txt <CR> 0f "cp=2jji
 nnoremap ,/ _i//<Esc> 
 nnoremap ,b :BTags<CR>
 
+:autocmd BufWritePost * normal gg=G''zz
+"TODO custumize the ctag depending on the extension of the file, for now it is
+"cpp.
+:autocmd BufWritePost *.cpp,*.h silent execute '!ctags -R --sort=no --c++-kinds=+p-n --fields=+iaS --extras=+q --language-force=C++ . '
 command! MakeTags !ctags -R .
 nnoremap ,f :Files .<CR>
 nnoremap <c-f><c-n> :Rg <c-r><c-w><CR> 
