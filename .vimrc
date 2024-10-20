@@ -24,7 +24,7 @@ set ignorecase
 set smartcase
 set hlsearch
 set clipboard^=unnamed
-
+highlight CursorLine cterm=none ctermbg=lightgray ctermfg=black guibg=#FFD700 guifg=black
 load-plugins
 
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
@@ -47,10 +47,14 @@ nnoremap ,goe "cyiw :read $HOME/.vim/.skeleton_go_err.txt <CR> 0f "cp=2jji
 nnoremap ,/ _i//<Esc> 
 nnoremap ,b :BTags<CR>
 
-:autocmd BufWritePost * normal gg=G''zz
+:autocmd BufWritePost *.cpp normal gg=G''zz
 "TODO custumize the ctag depending on the extension of the file, for now it is
 "cpp.
 :autocmd BufWritePost *.cpp,*.h silent execute '!ctags -R --sort=no --c++-kinds=+p-n --fields=+iaS --extras=+q --language-force=C++ . '
+:autocmd BufWritePost */Dev/* silent execute !pushSync
+:autocmd BufReadPre */Dev/* silent execute !pullSync
+:autocmd FileType tex nnoremap <buffer> <C-G> :silent execute '!openPdfFromTex ' . expand('%:r')<CR><CR>
+
 command! MakeTags !ctags -R .
 nnoremap ,f :Files .<CR>
 nnoremap <c-f><c-n> :Rg <c-r><c-w><CR> 
