@@ -1,0 +1,3 @@
+#!/bin/bash
+projectName=$(tmuxinator list --newline | tail -n +2 | fzf --prompt="Select session" )
+tmux switch-client -t "$projectName"

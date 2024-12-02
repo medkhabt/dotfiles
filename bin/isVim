@@ -1,0 +1,2 @@
+#! /bin/bash
+    tmux display-message -p "#{pane_current_command}" | grep -q vim

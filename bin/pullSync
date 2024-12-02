@@ -1,0 +1,5 @@
+#! /bin/bash 
+
+# fzf and specif the directories that can be synched.
+# pull from host 
+rsync -a "${serverSsh}:${pathServer}/" .

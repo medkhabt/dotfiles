@@ -58,13 +58,34 @@ call plug#begin()
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'lervag/vimtex' 
+Plug 'SirVer/ultisnips' 
+Plug 'honza/vim-snippets'
+Plug 'dense-analysis/ale'
 
 call plug#end()
 
 
+let g:vimtex_view_method = 'zathura'
+let g:vimtex_compiler_method= 'latexmk'
+let g:vimtex_quickfix_mode=0
+
+
+let g:UltiSnipsExpandTrigger="<Tab>"      " Expand snippets with Tab
+let g:UltiSnipsJumpForwardTrigger="<C-j>" " Jump forward
+let g:UltiSnipsJumpBackwardTrigger="<C-k>" " Jump backward
+
+let g:ale_linters = {'tex' : ['chktex']}
+
 nnoremap ,goe "cyiw :read $HOME/.vim/.skeleton_go_err.txt <CR> 0f "cp=2jji 
 nnoremap ,/ _i//<Esc> 
 nnoremap ,b :BTags<CR>
+
+nnoremap <leader>ll :VimtexCompile<CR>
+nnoremap <leader>lv :VimtexView<CR>
+nnoremap <leader>lc :VimtexClean<CR>
+
+command! -nargs=* Shell silent execute '!'.<q-args> | redraw!
 
 augroup filetype_cpp
     autocmd!
@@ -74,11 +95,11 @@ augroup filetype_cpp
     autocmd BufWritePost *.cpp,*.h silent execute '!ctags -R --sort=no --c++-kinds=+p-n --fields=+iaS --extras=+q --language-force=C++ . '
 augroup END
 
-augroup syncNotes
-    autocmd!
-    autocmd BufWritePost */Dev/* silent execute !pushSync
-    autocmd BufReadPre */Dev/* silent execute !pullSync
-augroup END
+"augroup syncNotes
+"    autocmd!
+"    autocmd BufWritePost */Dev/* silent execute !pushSync
+"    autocmd BufReadPre */Dev/* silent execute !pullSync
+"augroup END
 
 augroup pdfTex
     autocmd!
@@ -88,11 +109,17 @@ augroup pdfTex
                 \ endif
 augroup END
 
+augroup RedrawAfterCMD
+    autocmd!
+    autocmd ShellCmdPost !* redraw!
+augroup END
+
 
 command! MakeTags !ctags -R .
 nnoremap ,f :Files .<CR>
 nnoremap <c-f><c-n> :Rg <c-r><c-w><CR> 
 nnoremap ,rg :RG <CR>
+
 
 
 " For setting the working directory to the path i specified with vim command,
@@ -103,4 +130,12 @@ augroup cdpwd
     autocmd VimEnter * lcd %:p:h 
 augroup END
 
-
+function! SyncTexForward()
+let linenumber=line(".")
+let colnumber=col(".")
+let filename=bufname("%")
+let filenamePDF=filename[:-4]."pdf"
+let execstr="!zathura --synctex-forward " . linenumber . ":" . colnumber . ":" . filename . " " . filenamePDF . "&>/dev/null &"
+exec execstr 
+endfunction
+nmap  :call SyncTexForward()

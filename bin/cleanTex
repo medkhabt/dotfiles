@@ -1,0 +1,6 @@
+#! /bin/bash
+
+name=$(basename "$1")
+path=$(dirname "$1")
+
+rm -rf .${name}_build
