@@ -1,0 +1,4 @@
+#!/bin/bash
+tmuxinator list --newline | tail -n +2 | xargs -I {} tmuxinator start {}
+projectName=$(tmuxinator list --newline | tail -n +2 | fzf)
+tmux attach-session -t $projectName
