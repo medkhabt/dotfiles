@@ -1,7 +1,6 @@
 # /bin/bash 
-
-mainScreen=$(xrandr --listactivemonitors | tail +2 | awk '{print $4}' | fzf --info-command='echo -e "Select laptop screen: "')
-secondScreen=$(xrandr --listactivemonitors | tail +2 | awk '{print $4}' | fzf --info-command='echo -e "Select second screen: "')
+mainScreen=$(xrandr | grep " connected" | awk '{print $1}' | fzf --info-command='echo -e "Select laptop screen: "' )
+secondScreen=$(xrandr | grep " connected" | awk '{print $1}' | fzf --info-command='echo -e "Select second screen: "' )
 
 xrandr --output $secondScreen --auto --right-of $mainScreen 
 
