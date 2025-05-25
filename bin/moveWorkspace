@@ -1,0 +1,4 @@
+# /bin/bash 
+ws=$1
+screen=$(xrandr | grep " connected" | awk '{print $1}' | fzf --info-command='echo -e "Move workspace $ws to : "' )
+i3-msg "workspace $ws; move workspace to output $screen"
