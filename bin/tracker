@@ -1,0 +1,22 @@
+#! /bin/bash
+root_dir="/home/$USER/.local/share/ktimetracker"
+name=$1
+output_name="track_${name}_$(date '+%d_%m_%y').ics"
+
+
+## make a new project tracking dir if it doesn't exist
+if [ -z ${name} ]; then
+    echo "Project not specified"
+    exit 1
+else 
+    echo " name is ${name}"
+fi
+mkdir -p ${root_dir}/${name}
+
+if [ ! -f  ${root_dir}/${name}/${output_name} ] ; then 
+    echo "${output_name} is created successfully" 
+    cp ${root_dir}/ktimetracker_template.ics ${root_dir}/${name}/${output_name}
+else 
+    echo "${output_name} already exists" 
+fi
+

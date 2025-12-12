@@ -1,0 +1,38 @@
+#! /bin/bash
+
+name=$(basename "$1")
+path=$(dirname "$1")
+while getopts ":n" option; do 
+    case "${option}" in 
+        n) 
+            echo "we are in n"
+            shift $((OPTIND - 1))
+            echo " the 1 is $1"
+            pdflatex -output-directory=.${name}_build $1
+            cp *.bib .${name}_build
+            cd .${name}_build
+            bibtex $1
+            cd ..
+            pdflatex -output-directory=.${name}_build $1
+            pdflatex -output-directory=.${name}_build $1
+            exit 0;;
+        *) 
+            echo "Invalid option -$OPTARG" >&2
+            exit 1 ;;
+    esac
+done
+
+shift $((OPTIND - 1))
+
+if [[ -n $1 ]]; then 
+    mkdir .${name}_build 2> /dev/null 
+    pdflatex -output-directory=.${name}_build $1.tex
+    cp *.bib .${name}_build
+    cd .${name}_build
+    bibtex $1
+    cd ..
+    pdflatex -output-directory=.${name}_build $1.tex
+    pdflatex -output-directory=.${name}_build $1.tex
+    evince .${name}_build/${name}.pdf
+fi
+
